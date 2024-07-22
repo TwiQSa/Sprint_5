@@ -1,18 +1,17 @@
 from selenium.webdriver.common.by import By
-from selenium import webdriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions
+import locators_for_tests
 
 class TestRegistration:
-    def test_registration_successful(self):
-        driver = webdriver.Chrome()
+    def test_registration_successful(self, driver):
         driver.get("https://stellarburgers.nomoreparties.site/register")
 
-        driver.find_element(By.XPATH, ".//input[@class='text input__textfield text_type_main-default' and @name='name'][1]").send_keys("Semyon")
-        driver.find_element(By.XPATH, "/html/body/div/div/main/div/form/fieldset[2]/div/div/input").send_keys("semyonchshemelinin8149@yandex.ru")
-        driver.find_element(By.XPATH, ".//input[@class='text input__textfield text_type_main-default' and @name='Пароль']").send_keys("123abc")
+        driver.find_element(*locators_for_tests.name_reg).send_keys("Semyon")
+        driver.find_element(*locators_for_tests.email_reg).send_keys("semyonchshemelinin8162@yandex.ru")
+        driver.find_element(*locators_for_tests.password_reg).send_keys("123abc")
 
-        driver.find_element(By.XPATH, ".//button[text()='Зарегистрироваться']").click()
+        driver.find_element(*locators_for_tests.registration_button).click()
 
         WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located(((By.XPATH, ".//button[text()='Войти']"))))
 
@@ -20,17 +19,16 @@ class TestRegistration:
 
         driver.quit()
 
-    def test_registration_error_for_incorrect_password(self):
-        driver = webdriver.Chrome()
+    def test_registration_error_for_incorrect_password(self, driver):
         driver.get("https://stellarburgers.nomoreparties.site/register")
 
-        driver.find_element(By.XPATH,".//input[@class='text input__textfield text_type_main-default' and @name='name'][1]").send_keys("Semyon")
-        driver.find_element(By.XPATH, "/html/body/div/div/main/div/form/fieldset[2]/div/div/input").send_keys("semyonchshemelinin8002@yandex.ru")
-        driver.find_element(By.XPATH, ".//input[@class='text input__textfield text_type_main-default' and @name='Пароль']").send_keys("123ab")
+        driver.find_element(*locators_for_tests.name_reg).send_keys("Semyon")
+        driver.find_element(*locators_for_tests.email_reg).send_keys("semyonchshemelinin8002@yandex.ru")
+        driver.find_element(*locators_for_tests.password_reg).send_keys("123ab")
 
-        driver.find_element(By.XPATH, ".//button[text()='Зарегистрироваться']").click()
+        driver.find_element(*locators_for_tests.registration_button).click()
 
-        error = driver.find_element(By.XPATH, ".//p[contains(text(), 'Некорректный пароль')]")
+        error = driver.find_element(*locators_for_tests.error_message)
 
         assert 'Некорректный пароль' in error.text
 
